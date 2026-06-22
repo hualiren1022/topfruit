@@ -265,7 +265,7 @@ function build(){
   html+='<div class="cover-title">'+coverData.title+'</div>';
   html+='<div class="cover-sub">'+coverData.sub+'</div>';
   html+='<div class="cover-desc">'+coverData.desc+'</div>';
-  html+='<div class="cover-swipe"><div class="arrow-bar"><span></span><span></span><span></span></div><div class="cover-swipe-text">滑动浏览</div></div></div></div>';
+  html+='<div class="cover-swipe"><img src="images/qrcode.png" alt="二维码" style="width:100px;height:100px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1)"><div class="cover-swipe-text" style="margin-top:6px">扫码浏览</div></div></div></div>';
   CATEGORIES.forEach((cat,ci)=>{
     html+='<div class="page"><div class="page-inner">';
     html+='<div class="cat-header"><div class="accent"></div><div class="cat-title">'+cat.name+'</div></div>';
