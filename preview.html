@@ -1,0 +1,472 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>顶端果业 - 产品展示</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--green:#2D8A4E;--green-dark:#1E6B38;--gold:#D4A84B;--cream:#FFF9F0;--text:#2D2D2D;--text2:#888;--shadow:rgba(0,0,0,.08)}
+html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#2D1B14;color:var(--text);user-select:none}
+
+.bg-decor{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-decor .circle{position:absolute;border-radius:50%;opacity:.07}
+.bg-decor .c1{width:300px;height:300px;top:-80px;right:-60px;background:var(--green)}
+.bg-decor .c2{width:200px;height:200px;bottom:10%;left:-80px;background:var(--gold)}
+.bg-decor .c3{width:150px;height:150px;top:40%;right:-40px;background:var(--green)}
+.bg-decor .leaf{position:absolute;font-size:40px;opacity:.08;animation:drifting linear infinite}
+.bg-decor .l1{top:15%;left:5%;animation-duration:18s}
+.bg-decor .l2{top:55%;right:8%;animation-duration:22s;animation-delay:-8s}
+.bg-decor .l3{bottom:20%;left:15%;animation-duration:25s;animation-delay:-14s}
+@keyframes drifting{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(10deg)}100%{transform:translateY(0) rotate(0deg)}}
+
+.phone-frame{width:100%;max-width:414px;margin:0 auto;height:100dvh;position:relative;overflow:hidden;background:var(--cream);z-index:1}
+@media(min-width:480px){.phone-frame{border-radius:24px;box-shadow:0 20px 80px rgba(0,0,0,.5);top:20px;position:relative;height:calc(100dvh - 40px);max-height:736px}}
+@media(min-width:768px){.phone-frame{max-height:800px}}
+#app{width:100%;height:100%;position:relative;overflow:hidden}
+.track{display:flex;height:100%;transition:transform .5s cubic-bezier(.25,.1,.25,1);will-change:transform}
+.track.dragging{transition:none}
+.page{flex:0 0 100%;height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative}
+.page-inner{min-height:100%;display:flex;flex-direction:column;padding:52px 14px 60px;position:relative}
+
+.page-cover{background:linear-gradient(160deg,#2D8A4E 0,#1E6B38 40%,#0F4A26 100%);color:#fff;position:relative;overflow:hidden}
+.page-cover::before{content:"";position:absolute;top:-40%;right:-30%;width:500px;height:500px;border-radius:50%;background:rgba(255,255,255,.04)}
+.page-cover::after{content:"";position:absolute;bottom:-30%;left:-20%;width:400px;height:400px;border-radius:50%;background:rgba(255,215,0,.04)}
+.page-cover .page-inner{justify-content:center;align-items:center;text-align:center;padding:30px 24px;position:relative;z-index:1}
+.cover-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:2px;margin-bottom:28px;border:1px solid rgba(255,255,255,.15)}
+.cover-badge .dot{width:6px;height:6px;border-radius:50%;background:#FFD700;box-shadow:0 0 8px rgba(255,215,0,.6);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+.cover-icon{font-size:72px;margin-bottom:14px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.25));animation:bounce-icon 3s ease-in-out infinite}
+@keyframes bounce-icon{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.cover-title{font-size:34px;font-weight:700;letter-spacing:5px;margin-bottom:6px;text-shadow:0 3px 16px rgba(0,0,0,.25)}
+.cover-sub{font-size:14px;font-weight:300;letter-spacing:6px;opacity:.85;margin-bottom:20px}
+.cover-desc{font-size:13px;line-height:2;opacity:.65;margin-bottom:44px}
+.cover-swipe{display:flex;flex-direction:column;align-items:center;gap:8px;animation:float-hint 2.2s ease-in-out infinite}
+.cover-swipe .arrow-bar{display:flex;gap:4px}
+.cover-swipe .arrow-bar span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);animation:arrow-dot 1.5s ease-in-out infinite}
+.cover-swipe .arrow-bar span:nth-child(2){animation-delay:.3s}
+.cover-swipe .arrow-bar span:nth-child(3){animation-delay:.6s}
+@keyframes arrow-dot{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+.cover-swipe-text{font-size:11px;opacity:.4;letter-spacing:3px}
+@keyframes float-hint{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+.cat-header{display:flex;align-items:center;gap:8px;padding:8px 4px 6px;flex-shrink:0}
+.cat-header .accent{width:3px;height:18px;background:var(--green);border-radius:2px;flex-shrink:0}
+.cat-title{font-size:19px;font-weight:700;color:var(--text);letter-spacing:1px}
+.cat-sub{font-size:11px;color:var(--text2);padding:0 4px 12px 15px;border-bottom:1px solid #eee;margin-bottom:12px;flex-shrink:0}
+.products{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;align-content:start}
+
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px var(--shadow);transition:all .35s cubic-bezier(.25,.1,.25,1);cursor:pointer;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,.12)}
+.card:active{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.card-img-wrap{position:relative;width:100%;aspect-ratio:var(--card-img-ratio,1);overflow:hidden;background:var(--cream)}
+.card-img-wrap .swiper{display:flex;height:100%;transition:transform .35s cubic-bezier(.25,.1,.25,1)}
+.card-img-wrap .swiper img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.card-img-wrap .swiper.dragging{transition:none}
+.card-img-indicator{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:3px;z-index:5}
+.card-img-indicator span{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.4);transition:all .25s}
+.card-img-indicator span.active{background:#fff;width:10px;border-radius:2px}
+.card-body{padding:8px 10px 12px}
+.card-name{font-size:var(--name-size,13px);font-weight:600;color:var(--text);margin-bottom:2px;line-height:1.3}
+.card-spec{font-size:var(--spec-size,10px);color:var(--text2);margin-bottom:2px;line-height:1.3}
+.card-weight{font-size:10px;color:#999;margin-bottom:4px;line-height:1.3;display:flex;gap:6px;flex-wrap:wrap}
+.card-weight .w-label{color:#bbb}.card-weight .w-val{color:#777;font-weight:500}
+.card-weight .w-sep{color:#e0d5c5;font-size:8px}
+.card-price{font-size:var(--price-size,16px);font-weight:700;color:var(--green)}
+.card-price .unit{font-size:12px;font-weight:400;color:#999}
+.card-tag{position:absolute;top:8px;left:8px;background:var(--green);color:#fff;font-size:9px;padding:3px 8px;border-radius:3px;font-weight:600;letter-spacing:.5px;z-index:6;box-shadow:0 2px 6px rgba(45,138,78,.3)}
+.card-tag.gold{background:var(--gold);color:#fff;box-shadow:0 2px 6px rgba(212,168,75,.3)}
+
+.page-indicator{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:50;flex-wrap:wrap;justify-content:center;max-width:80%}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,.1);transition:all .4s cubic-bezier(.25,.1,.25,1);flex-shrink:0}
+.dot.active{background:var(--green);width:18px;border-radius:3px;box-shadow:0 0 6px rgba(45,138,78,.3)}
+
+.nav-arrow{position:fixed;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,.1);border:none;z-index:40;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:all .3s}
+.nav-arrow.show{opacity:1;pointer-events:auto}
+.nav-arrow:hover{box-shadow:0 4px 16px rgba(0,0,0,.15);transform:translateY(-50%) scale(1.05)}
+.nav-arrow:active{transform:translateY(-50%) scale(.92)}
+.nav-arrow svg{width:18px;height:18px;fill:none;stroke:var(--text);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.nav-prev{left:5px}.nav-next{right:5px}
+.page::-webkit-scrollbar{display:none}
+.page{-ms-overflow-style:none;scrollbar-width:none}
+
+.detail-modal{position:fixed;inset:0;z-index:200;display:none;background:rgba(0,0,0,.6);backdrop-filter:blur(12px);justify-content:center;align-items:center;padding:20px}
+.detail-modal.show{display:flex}
+.detail-box{background:#fff;border-radius:16px;max-width:360px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .35s cubic-bezier(.25,.1,.25,1);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.detail-box .d-img-wrap{position:relative;width:100%;aspect-ratio:1;overflow:hidden;background:var(--cream)}
+.detail-box .d-img-wrap .d-swiper{display:flex;height:100%}
+.detail-box .d-img-wrap .d-swiper img{flex:0 0 100%;width:100%;height:100%;object-fit:cover}
+.detail-box .d-img-wrap .d-swiper-indicator{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:5}
+.detail-box .d-img-wrap .d-swiper-indicator span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:all .25s}
+.detail-box .d-img-wrap .d-swiper-indicator span.active{background:#fff;width:12px;border-radius:3px}
+.detail-box .d-img-wrap .d-nav{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.85);border:none;cursor:pointer;z-index:6;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text);opacity:0;transition:opacity .25s}
+.detail-box .d-img-wrap:hover .d-nav{opacity:1}
+.detail-box .d-img-wrap .d-nav:active{transform:translateY(-50%) scale(.9)}
+.detail-box .d-img-wrap .d-nav-prev{left:6px}
+.detail-box .d-img-wrap .d-nav-next{right:6px}
+.detail-box .d-body{padding:16px 18px 20px}
+.detail-box .d-name{font-size:20px;font-weight:700;margin-bottom:4px}
+.detail-box .d-spec{font-size:13px;color:var(--text2);margin-bottom:8px}
+.detail-box .d-weight{display:flex;gap:16px;margin-bottom:12px}
+.detail-box .d-weight .dw-item{flex:1;background:var(--cream);border-radius:8px;padding:10px;text-align:center}
+.detail-box .d-weight .dw-label{font-size:11px;color:var(--text2);margin-bottom:2px}
+.detail-box .d-weight .dw-val{font-size:18px;font-weight:700;color:var(--text)}
+.detail-box .d-price{font-size:28px;font-weight:800;color:var(--green);margin-bottom:12px}
+.detail-box .d-close{width:100%;padding:10px;border:none;border-radius:8px;background:var(--green);color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:2px;transition:all .25s}
+.detail-box .d-close:active{opacity:.8;transform:scale(.98)}
+
+/* Full-screen Viewer */
+.img-viewer{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);justify-content:center;align-items:center;flex-direction:column;padding:20px}
+.img-viewer.show{display:flex}
+.img-viewer .iv-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
+.img-viewer .iv-img-wrap{flex:1;display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden;position:relative}
+.img-viewer .iv-img-wrap .iv-swiper{display:flex;height:100%;align-items:center;transition:transform .35s cubic-bezier(.25,.1,.25,1)}
+.img-viewer .iv-img-wrap .iv-swiper img{flex:0 0 100%;width:100%;height:auto;max-height:100%;object-fit:contain}
+.img-viewer .iv-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:13px;letter-spacing:2px;z-index:10}
+.img-viewer .iv-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:24px;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center}
+.img-viewer .iv-nav-prev{left:10px}
+.img-viewer .iv-nav-next{right:10px}
+.zoom-hint{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:8;cursor:pointer;opacity:0;transition:opacity .25s;border:none}
+.card-img-wrap:hover .zoom-hint{opacity:1}
+
+@media(max-height:640px){
+  .page-inner{padding:38px 10px 48px}.products{gap:7px}.card-body{padding:5px 7px 9px}
+  .card-img-wrap{aspect-ratio:3/4}.cover-title{font-size:26px}.cover-icon{font-size:50px}
+  .cat-title{font-size:16px}.card-name{font-size:12px}.card-price{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="bg-decor">
+  <div class="circle c1"></div>
+  <div class="circle c2"></div>
+  <div class="circle c3"></div>
+  <div class="leaf l1">&#127822;</div>
+  <div class="leaf l2">&#127822;</div>
+  <div class="leaf l3">&#127822;</div>
+</div>
+
+<div class="phone-frame" id="phoneFrame"><div id="app">
+<div class="img-viewer" id="imgViewer" onclick="if(event.target===this)closeViewer()">
+    <button class="iv-close" onclick="closeViewer()">X</button>
+    <div class="iv-img-wrap">
+      <div class="iv-swiper" id="ivSwiper"></div>
+      <button class="iv-nav iv-nav-prev" id="ivPrev" onclick="ivNav(-1)">&#8249;</button>
+      <button class="iv-nav iv-nav-next" id="ivNext" onclick="ivNav(1)">&#8250;</button>
+    </div>
+    <div class="iv-counter" id="ivCounter"></div>
+  </div>
+<div class="detail-modal" id="detailModal" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-box" id="detailBox"></div>
+</div>
+<div class="track" id="track"></div>
+<div class="page-indicator" id="indicator"></div>
+<button class="nav-arrow nav-prev" onclick="goPage(cur-1)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+<button class="nav-arrow nav-next" onclick="goPage(cur+1)"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></button>
+</div></div>
+
+<script>
+const DEFAULT_CATS = [
+  { name:'惊喜试吃装', catSub:'顶端果业 · 尝鲜体验', items:[
+    { name:'6枚中果', spec:'尝鲜体验装', netWeight:'3斤', grossWeight:'3.5斤', price:'39', images:['images/prod-0-0-0.jpg','images/prod-0-0-1.png'], tag:'' },
+    { name:'6枚大果', spec:'大果尝鲜装', netWeight:'4斤', grossWeight:'4.5斤', price:'49', images:['images/prod-0-1-0.png','images/prod-0-1-1.jpg'], tag:'' },
+    { name:'6枚组合装切果器', spec:'含切果器', netWeight:'4.2斤', grossWeight:'4.8斤', price:'59', images:['images/prod-0-2-0.jpg','images/prod-0-2-1.jpg'], tag:'超值' } ] },
+  { name:'商务尊享', catSub:'顶端果业 · 商务首选', items:[
+    { name:'24枚85', spec:'果径85mm', netWeight:'12斤', grossWeight:'13斤', price:'79', images:['images/prod-1-0-0.jpg','images/prod-1-0-1.jpg'], tag:'商务首选' },
+    { name:'24枚80', spec:'果径80mm', netWeight:'10斤', grossWeight:'11斤', price:'69', images:['images/prod-1-1-0.jpg','images/prod-1-1-1.png'], tag:'' } ] },
+  { name:'礼尚佳享', catSub:'顶端果业 · 佳礼之选', items:[
+    { name:'12枚90（新）', spec:'果径90mm', netWeight:'7斤', grossWeight:'7.8斤', price:'98', images:['images/prod-2-0-0.jpg','images/prod-2-0-1.jpg'], tag:'升级装' },
+    { name:'9枚100（新）', spec:'果径100mm', netWeight:'8斤', grossWeight:'8.8斤', price:'108', images:['images/prod-2-1-0.jpg','images/prod-2-1-1.jpg'], tag:'礼赠' },
+    { name:'12枚90（红）', spec:'果径90mm', netWeight:'7斤', grossWeight:'7.8斤', price:'98', images:['images/prod-2-2-0.jpg','images/prod-2-2-1.png'], tag:'经典' },
+    { name:'15枚85（红）', spec:'果径85mm', netWeight:'8斤', grossWeight:'8.8斤', price:'128', images:['images/prod-2-3-0.jpg','images/prod-2-3-1.png'], tag:'' },
+    { name:'15枚75（红）', spec:'果径75mm', netWeight:'6斤', grossWeight:'6.8斤', price:'88', images:['images/prod-2-4-0.png','images/prod-2-4-1.jpg'], tag:'' },
+    { name:'15枚80', spec:'果径80mm', netWeight:'7斤', grossWeight:'7.8斤', price:'98', images:['images/prod-2-5-0.jpg','images/prod-2-5-1.jpg'], tag:'' } ] },
+  { name:'白领专享', catSub:'顶端果业 · 精致之选', items:[
+    { name:'16枚90', spec:'果径90mm', netWeight:'9斤', grossWeight:'10斤', price:'128', images:['images/prod-3-0-0.png','images/prod-3-0-1.png'], tag:'' },
+    { name:'20枚85', spec:'果径85mm', netWeight:'10斤', grossWeight:'11斤', price:'138', images:['images/prod-3-1-0.png','images/prod-3-1-1.jpg'], tag:'热销' },
+    { name:'20枚80', spec:'果径80mm', netWeight:'9斤', grossWeight:'10斤', price:'128', images:['images/prod-3-2-0.jpg'], tag:'' },
+    { name:'20枚75', spec:'果径75mm', netWeight:'8斤', grossWeight:'9斤', price:'98', images:['images/prod-3-3-0.jpg','images/prod-3-3-1.jpg'], tag:'' },
+    { name:'25枚70', spec:'果径70mm', netWeight:'8斤', grossWeight:'9斤', price:'88', images:['images/prod-3-4-0.png','images/prod-3-4-1.png'], tag:'经济装' } ] },
+  { name:'贵族家享', catSub:'顶端果业 · 家庭分享', items:[
+    { name:'40枚70', spec:'果径70mm', netWeight:'13斤', grossWeight:'14.5斤', price:'108', images:['images/prod-4-0-0.jpg','images/prod-4-0-1.png'], tag:'' },
+    { name:'40枚75', spec:'果径75mm', netWeight:'16斤', grossWeight:'17.5斤', price:'138', images:['images/prod-4-1-0.jpg','images/prod-4-1-1.jpg'], tag:'家庭装' },
+    { name:'40枚80', spec:'果径80mm', netWeight:'18斤', grossWeight:'19.5斤', price:'158', images:['images/prod-4-2-0.png','images/prod-4-2-1.jpg'], tag:'' },
+    { name:'40枚85', spec:'果径85mm', netWeight:'20斤', grossWeight:'21.5斤', price:'178', images:['images/prod-4-3-0.jpg','images/prod-4-3-1.jpg'], tag:'超值装' } ] },
+  { name:'顶端优选', catSub:'顶端果业 · 品质之选', items:[
+    { name:'9枚85mm', spec:'果径85mm', netWeight:'5斤', grossWeight:'5.5斤', price:'128', images:['images/prod-5-0-0.jpg','images/prod-5-0-1.png'], tag:'精品' },
+    { name:'10枚80mm', spec:'果径80mm', netWeight:'5斤', grossWeight:'5.5斤', price:'98', images:['images/prod-5-1-0.png','images/prod-5-1-1.png'], tag:'' },
+    { name:'12枚75mm', spec:'果径75mm', netWeight:'5斤', grossWeight:'5.5斤', price:'78', images:['images/prod-5-2-0.jpg','images/prod-5-2-1.JPG'], tag:'' },
+    { name:'15枚70mm', spec:'果径70mm', netWeight:'5斤', grossWeight:'5.5斤', price:'68', images:['images/prod-5-3-0.jpg','images/prod-5-3-1.jpg'], tag:'' } ] },
+  { name:'秦脆系列', catSub:'顶端果业 · 脆甜多汁', items:[
+    { name:'6枚大果', spec:'秦脆品种', netWeight:'4斤', grossWeight:'4.5斤', price:'59', images:['images/prod-6-0-0.jpg','images/prod-6-0-1.jpg'], tag:'尝鲜' },
+    { name:'16枚90mm', spec:'秦脆', netWeight:'9斤', grossWeight:'10斤', price:'128', images:['images/prod-6-1-0.jpg','images/prod-6-1-1.jpg'], tag:'' },
+    { name:'25枚70mm', spec:'秦脆', netWeight:'8斤', grossWeight:'9斤', price:'88', images:['images/prod-6-2-0.jpg','images/prod-6-2-1.jpg'], tag:'' },
+    { name:'20枚75mm', spec:'秦脆', netWeight:'8斤', grossWeight:'9斤', price:'98', images:['images/prod-6-3-0.png','images/prod-6-3-1.jpg'], tag:'' },
+    { name:'20枚80mm', spec:'秦脆', netWeight:'9斤', grossWeight:'10斤', price:'118', images:['images/prod-6-4-0.jpg','images/prod-6-4-1.jpg'], tag:'' },
+    { name:'20枚85mm', spec:'秦脆', netWeight:'10斤', grossWeight:'11斤', price:'138', images:['images/prod-6-5-0.jpg','images/prod-6-5-1.png'], tag:'' } ] },
+  { name:'瑞雪系列', catSub:'顶端果业 · 雪白如蜜', items:[
+    { name:'15枚70mm', spec:'瑞雪', netWeight:'5斤', grossWeight:'5.6斤', price:'68', images:['images/prod-7-0-0.png','images/prod-7-0-1.jpg'], tag:'' },
+    { name:'15枚75mm', spec:'瑞雪', netWeight:'6斤', grossWeight:'6.6斤', price:'78', images:['images/prod-7-1-0.jpg','images/prod-7-1-1.jpg'], tag:'' },
+    { name:'15枚80mm', spec:'瑞雪', netWeight:'7斤', grossWeight:'7.6斤', price:'98', images:['images/prod-7-2-0.jpg','images/prod-7-2-1.jpg'], tag:'' },
+    { name:'15枚85mm', spec:'瑞雪', netWeight:'8斤', grossWeight:'8.6斤', price:'118', images:['images/prod-7-3-0.jpg','images/prod-7-3-1.jpg'], tag:'' } ] },
+  { name:'维纳斯黄金', catSub:'顶端果业 · 黄金珍品', items:[
+    { name:'抱抱桶', spec:'礼盒装', netWeight:'6斤', grossWeight:'7斤', price:'99', images:['images/prod-8-0-0.jpg','images/prod-8-0-1.png'], tag:'人气' },
+    { name:'15枚70mm', spec:'果径70mm', netWeight:'5斤', grossWeight:'5.6斤', price:'68', images:['images/prod-8-1-0.jpg','images/prod-8-1-1.jpg'], tag:'' },
+    { name:'12枚75mm', spec:'果径75mm', netWeight:'5斤', grossWeight:'5.6斤', price:'78', images:['images/prod-8-2-0.jpg','images/prod-8-2-1.jpg'], tag:'' },
+    { name:'10枚80mm', spec:'果径80mm', netWeight:'5斤', grossWeight:'5.6斤', price:'98', images:['images/prod-8-3-0.jpg','images/prod-8-3-1.jpg'], tag:'' } ] },
+  { name:'高端礼盒款', catSub:'顶端果业 · 尊享品质', items:[
+    { name:'新三果A', spec:'高端礼盒', netWeight:'6斤', grossWeight:'7斤', price:'138', images:['images/prod-9-0-0.jpg','images/prod-9-0-1.jpg'], tag:'尊享' },
+    { name:'新三果B', spec:'高端礼盒', netWeight:'6斤', grossWeight:'7斤', price:'138', images:['images/prod-9-1-0.jpg','images/prod-9-1-1.jpg'], tag:'尊享' },
+    { name:'维纳斯黄金', spec:'高端礼盒', netWeight:'6斤', grossWeight:'7斤', price:'128', images:['images/prod-9-2-0.jpg','images/prod-9-2-1.png'], tag:'金装' },
+    { name:'秦脆苹果', spec:'高端礼盒', netWeight:'6斤', grossWeight:'7斤', price:'128', images:['images/prod-9-3-0.jpg','images/prod-9-3-1.jpg'], tag:'' },
+    { name:'瑞雪苹果', spec:'高端礼盒', netWeight:'6斤', grossWeight:'7斤', price:'128', images:['images/prod-9-4-0.jpg','images/prod-9-4-1.png'], tag:'' },
+    { name:'爱妃苹果', spec:'高端礼盒', netWeight:'6斤', grossWeight:'7斤', price:'138', images:['images/prod-9-5-0.png','images/prod-9-5-1.jpg'], tag:'进口' },
+    { name:'瑞香红', spec:'高端礼盒', netWeight:'6斤', grossWeight:'7斤', price:'128', images:['images/prod-9-6-0.png','images/prod-9-6-1.png'], tag:'' } ] }
+];
+
+
+let CATEGORIES;
+const DATA_VERSION = 3;
+
+let priceOver={},weightOver={};
+let coverData={badge:'陕西 · 顶端果业',title:'顶端果业',sub:'产品展示',desc:'源自黄土高原的优质水果<br>每一颗果实，都是自然的馈赠'};
+let logoData='',coverBgData='';
+let bgColor='cream';
+let fontSizes={name:12,price:15,spec:10};
+let imgRatio='1';
+let imgCache={};
+
+function loadData(){
+  try{
+    var saved=JSON.parse(localStorage.getItem('dd-admin'));
+    if(saved&&saved.dataVersion===DATA_VERSION&&saved.CATEGORIES){
+      CATEGORIES=saved.CATEGORIES;
+      if(saved.priceOver)priceOver=saved.priceOver;
+      if(saved.weightOver)weightOver=saved.weightOver;
+      if(saved.imgCache)imgCache=saved.imgCache;
+      if(saved.coverData)coverData={...coverData,...saved.coverData};
+      if(saved.logoData!==undefined)logoData=saved.logoData;
+      if(saved.coverBgData!==undefined)coverBgData=saved.coverBgData;
+      if(saved.bgColor)bgColor=saved.bgColor;
+      if(saved.fontSizes)fontSizes={...fontSizes,...saved.fontSizes};
+      if(saved.imgRatio)imgRatio=saved.imgRatio;
+    }else{
+      CATEGORIES=JSON.parse(JSON.stringify(DEFAULT_CATS));
+      if(saved){
+        if(saved.priceOver)priceOver=saved.priceOver;
+        if(saved.weightOver)weightOver=saved.weightOver;
+        if(saved.imgCache)imgCache=saved.imgCache;
+        if(saved.coverData)coverData={...coverData,...saved.coverData};
+        if(saved.logoData!==undefined)logoData=saved.logoData;
+        if(saved.coverBgData!==undefined)coverBgData=saved.coverBgData;
+        if(saved.bgColor)bgColor=saved.bgColor;
+        if(saved.fontSizes)fontSizes={...fontSizes,...saved.fontSizes};
+        if(saved.imgRatio)imgRatio=saved.imgRatio;
+      }
+    }
+  }catch(e){
+    CATEGORIES=JSON.parse(JSON.stringify(DEFAULT_CATS));
+  }
+}
+loadData();
+try{const d=JSON.parse(localStorage.getItem('dd-preview'));if(d&&d.imgCache)imgCache=d.imgCache}catch(e){}
+
+
+const track=document.getElementById('track'),indicator=document.getElementById('indicator');
+let cur=0,animating=false,total=CATEGORIES.length+1;
+function gi(key,idx){const c=imgCache[key];if(c&&c[idx])return c[idx];const item=getItem(key);if(!item)return'';return item.images&&item.images[idx]||''}
+function getItem(key){const[ci,ii]=key.split('-').map(Number);return CATEGORIES[ci]&&CATEGORIES[ci].items[ii]}
+
+function gp(key){return priceOver[key]!==undefined?priceOver[key]:null}
+function gw(key,t){const w=weightOver[key];if(w&&w[t]!==undefined)return w[t];return null}
+
+
+function build(){
+  // Apply admin settings
+  var bgColors={cream:'#FFF9F0',white:'#FFFFFF',warm:'#FFF8E7',gray:'#F5F5F5',green:'#F0F7EE',pink:'#FFF0F0'};
+  document.getElementById('phoneFrame').style.backgroundColor=bgColors[bgColor]||'#FFF9F0';
+  document.documentElement.style.setProperty('--name-size',(fontSizes.name||12)+'px');
+  document.documentElement.style.setProperty('--price-size',(fontSizes.price||15)+'px');
+  document.documentElement.style.setProperty('--spec-size',(fontSizes.spec||10)+'px');
+  document.documentElement.style.setProperty('--card-img-ratio',imgRatio||'1');
+  let coverCss=coverBgData?'background:url('+coverBgData+') center/cover, linear-gradient(160deg,#2D8A4E 0,#1E6B38 40%,#0F4A26 100%)':'';
+  let html='<div class="page page-cover" style="'+coverCss+'"><div class="page-inner">';
+  if(logoData&&logoData.startsWith('data:')){
+    html+='<div style="width:72px;height:72px;margin:0 auto 10px;border-radius:12px;overflow:hidden"><img src="'+logoData+'" style="width:100%;height:100%;object-fit:cover"></div>';
+  }else{
+    html+='<div class="cover-icon">&#127822;</div>';
+  }
+  html+='<div class="cover-title">'+coverData.title+'</div>';
+  html+='<div class="cover-sub">'+coverData.sub+'</div>';
+  html+='<div class="cover-desc">'+coverData.desc+'</div>';
+  html+='<div class="cover-swipe"><div class="arrow-bar"><span></span><span></span><span></span></div><div class="cover-swipe-text">滑动浏览</div></div></div></div>';
+  CATEGORIES.forEach((cat,ci)=>{
+    html+='<div class="page"><div class="page-inner">';
+    html+='<div class="cat-header"><div class="accent"></div><div class="cat-title">'+cat.name+'</div></div>';
+    html+='<div class="cat-sub">'+(cat.catSub||'顶端果业 · 精选产品')+'</div><div class="products">';
+    cat.items.forEach((item,ii)=>{
+      const key=ci+'-'+ii;
+      const imgs=item.images||[''];
+      const p=gp(key)||item.price||'';
+      const nw=gw(key,'n')||item.netWeight||'';
+      const gw2=gw(key,'g')||item.grossWeight||'';
+      const tg=item.tag||'';
+      const tagClass=tg==='超值'||tg==='热销'||tg==='人气'||tg==='新品'?' gold':'';
+      html+='<div class="card" onclick="showDetail('+ci+','+ii+')">';
+      if(tg)html+='<div class="card-tag'+tagClass+'">'+tg+'</div>';
+      html+='<div class="card-img-wrap">';
+      html+='<button class="zoom-hint" onclick="event.stopPropagation();openViewer(\''+key+'\')">◆</button>';
+      html+='<div class="swiper" id="sw-'+key+'">';
+      const totalImgs=Math.max(1,imgs.length);
+      for(let k=0;k<totalImgs;k++){
+        const src=gi(key,k)||imgs[k]||'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23FFF9F0" width="200" height="200"/%3E%3Ctext x="100" y="110" text-anchor="middle" fill="%23ccc" font-size="40"%3E🍎%3C/text%3E%3C/svg%3E';
+        html+='<img src="'+src+'" alt="'+item.name+'" loading="lazy">';
+      }
+      html+='</div>';
+      if(totalImgs>1){
+        html+='<div class="card-img-indicator" id="swi-'+key+'">';
+        for(let k=0;k<totalImgs;k++)html+='<span'+(k===0?' class="active"':'')+'></span>';
+        html+='</div>';
+      }
+      html+='</div>';
+      html+='<div class="card-body">';
+      html+='<div class="card-name">'+item.name+'</div>';
+      html+='<div class="card-spec">'+item.spec+'</div>';
+      html+='<div class="card-weight"><span class="w-label">净</span><span class="w-val">'+nw+'</span><span class="w-sep">|</span><span class="w-label">毛</span><span class="w-val">'+gw2+'</span></div>';
+      html+='<div class="card-price">'+(p?'&yen;'+p+' <span class="unit">/箱</span>':'<span style="font-size:11px;color:#bbb;font-weight:400">咨询价格</span>')+'</div>';
+      html+='</div></div>';
+    });
+    html+='</div></div></div>';
+  });
+  track.innerHTML=html;
+  indicator.innerHTML='';
+  for(let i=0;i<total;i++){const d=document.createElement('span');d.className='dot'+(i===cur?' active':'');indicator.appendChild(d)}
+  initSwiper();
+}
+
+function initSwiper(){
+  document.querySelectorAll('.swiper').forEach(el=>{
+    const imgs=el.querySelectorAll('img');
+    if(imgs.length<2)return;
+    let idx=0,sx=0,dx=0,dragging=false;
+    const update=(i)=>{
+      idx=Math.max(0,Math.min(i,imgs.length-1));
+      el.style.transform='translateX(-'+(idx*100)+'%)';
+      const ind=el.parentElement.querySelector('.card-img-indicator');
+      if(ind)ind.querySelectorAll('span').forEach((s,j)=>s.classList.toggle('active',j===idx));
+    };
+    el.addEventListener('touchstart',e=>{if(el.classList.contains('dragging'))return;sx=e.touches[0].clientX;dx=0;dragging=false;el.classList.remove('dragging')},{passive:true});
+    el.addEventListener('touchmove',e=>{const tx=e.touches[0].clientX-sx;if(!dragging&&Math.abs(tx)>5){dragging=true;el.classList.add('dragging')}if(dragging){dx=tx;el.style.transform='translateX('+(-idx*100+tx/el.offsetWidth*100)+'%)'}},{passive:true});
+    el.addEventListener('touchend',()=>{el.classList.remove('dragging');if(dragging&&Math.abs(dx)>el.offsetWidth*.15){dx<0?update(idx+1):update(idx-1)}else update(idx);dragging=false;dx=0},{passive:true});
+    el.addEventListener('click',e=>e.stopPropagation());
+  });
+}
+
+function showDetail(ci,ii){
+  const cat=CATEGORIES[ci],item=cat.items[ii];const key=ci+'-'+ii;
+  const imgs=item.images||[''];const cached=imgCache[key]||[];const totalImgs=Math.max(1,imgs.length,cached.length);
+  const p=gp(key)||item.price||'';
+  const nw=gw(key,'n')||item.netWeight||'';
+  const gw2=gw(key,'g')||item.grossWeight||'';
+  let imgHtml='<div class="d-img-wrap" onclick="openViewer(\''+key+'\')" style="cursor:pointer">';
+  imgHtml+='<div class="d-swiper" id="dsw-'+key+'">';
+  for(let k=0;k<totalImgs;k++){
+    const src=gi(key,k)||imgs[k]||'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Crect fill="%23FFF9F0" width="200" height="200"/%3E%3Ctext x="100" y="110" text-anchor="middle" fill="%23ccc" font-size="40"%3E🍎%3C/text%3E%3C/svg%3E';
+    imgHtml+='<img src="'+src+'" alt="">';
+  }
+  imgHtml+='</div>';
+  if(totalImgs>1){
+    imgHtml+='<div class="d-swiper-indicator" id="dswi-'+key+'">';
+    for(let k=0;k<totalImgs;k++)imgHtml+='<span'+(k===0?' class="active"':'')+'></span>';
+    imgHtml+='</div>';
+    imgHtml+='<button class="d-nav d-nav-prev" onclick="event.stopPropagation();dSwipe(\''+key+'\',-1)">&#8249;</button>';
+    imgHtml+='<button class="d-nav d-nav-next" onclick="event.stopPropagation();dSwipe(\''+key+'\',1)">&#8250;</button>';
+  }
+  imgHtml+='</div>';
+  document.getElementById('detailBox').innerHTML=
+    imgHtml+
+    '<div class="d-body">'+
+    '<div class="d-name">'+item.name+'</div>'+
+    '<div class="d-spec">'+item.spec+'</div>'+
+    '<div class="d-weight">'+
+    '<div class="dw-item"><div class="dw-label">净重</div><div class="dw-val">'+nw+'</div></div>'+
+    '<div class="dw-item"><div class="dw-label">毛重</div><div class="dw-val">'+gw2+'</div></div>'+
+    '</div>'+
+    '<div class="d-price">'+(p?'&yen;'+p:'价格请咨询')+'</div>'+
+    '<button class="d-close" onclick="closeDetail()">关闭</button>'+
+    '</div>';
+  document.getElementById('detailModal').classList.add('show');
+  const el=document.getElementById('dsw-'+key);
+  if(el&&totalImgs>1){
+    el._idx=0;
+    el.addEventListener('touchstart',function(e){const t=e.touches[0];this._sx=t.clientX;this._dx=0;this._dr=false},{passive:true});
+    el.addEventListener('touchmove',function(e){const tx=e.touches[0].clientX-this._sx;if(!this._dr&&Math.abs(tx)>5){this._dr=true}if(this._dr){this._dx=tx;this.style.transform='translateX('+(-this._idx*100+tx/this.offsetWidth*100)+'%)'}},{passive:true});
+    el.addEventListener('touchend',function(){if(this._dr&&Math.abs(this._dx)>this.offsetWidth*.15){const ni=this._dx<0?this._idx+1:this._idx-1;dSwipe(key,ni-this._idx)}else{this.style.transform='translateX(-'+(this._idx*100)+'%)'}this._dr=false;this._dx=0},{passive:true});
+  }
+}
+function dSwipe(key,dir){
+  const el=document.getElementById('dsw-'+key);if(!el)return;
+  const total=el.querySelectorAll('img').length;
+  el._idx=Math.max(0,Math.min((el._idx||0)+dir,total-1));
+  el.style.transform='translateX(-'+(el._idx*100)+'%)';
+  const ind=document.getElementById('dswi-'+key);
+  if(ind)ind.querySelectorAll('span').forEach((s,i)=>s.classList.toggle('active',i===el._idx));
+}
+function closeDetail(){document.getElementById('detailModal').classList.remove('show')}
+
+// ===== Image Viewer =====
+var viewerSwp=null;
+function openViewer(key){
+  const[ci,ii]=key.split('-').map(Number);
+  const item=CATEGORIES[ci]&&CATEGORIES[ci].items[ii];
+  if(!item)return;
+  const imgs=item.images||[''];const total=Math.max(1,imgs.length);
+  viewerSwp=document.getElementById('ivSwiper');
+  let h='';
+  for(let k=0;k<total;k++){
+    const src=gi(key,k)||imgs[k]||'';
+    h+='<img src="'+src+'" alt="">';
+  }
+  viewerSwp.innerHTML=h;
+  viewerSwp.style.transform='translateX(0)';
+  viewerSwp._idx=0;
+  updateViewerCounter();
+  document.getElementById('imgViewer').classList.add('show');
+  viewerSwp.addEventListener('touchstart',function(e){const t=e.touches[0];this._sx=t.clientX;this._dx=0;this._dr=false},{passive:true});
+  viewerSwp.addEventListener('touchmove',function(e){const tx=e.touches[0].clientX-this._sx;if(!this._dr&&Math.abs(tx)>5){this._dr=true}if(this._dr){this._dx=tx;this.style.transform='translateX('+(-this._idx*100+tx/this.offsetWidth*100)+'%)'}},{passive:true});
+  viewerSwp.addEventListener('touchend',function(){if(this._dr&&Math.abs(this._dx)>this.offsetWidth*.15){const ni=this._dx<0?this._idx+1:this._idx-1;ivGo(ni)}else{this.style.transform='translateX(-'+(this._idx*100)+'%)'}this._dr=false;this._dx=0},{passive:true});
+}
+function ivGo(idx){
+  const swiper=viewerSwp||document.getElementById('ivSwiper');
+  const total=swiper.querySelectorAll('img').length;
+  swiper._idx=Math.max(0,Math.min(idx,total-1));
+  swiper.style.transform='translateX(-'+(swiper._idx*100)+'%)';
+  updateViewerCounter();
+}
+function ivNav(dir){
+  const swiper=viewerSwp||document.getElementById('ivSwiper');
+  ivGo((swiper._idx||0)+dir);
+}
+function updateViewerCounter(){
+  const swiper=viewerSwp||document.getElementById('ivSwiper');
+  const total=swiper.querySelectorAll('img').length;
+  const idx=(swiper._idx||0)+1;
+  document.getElementById('ivCounter').textContent=total>1?(idx+'/'+total):'';
+}
+function closeViewer(){
+  document.getElementById('imgViewer').classList.remove('show');
+}
+
+function goPage(i){if(animating||i<0||i>=total)return;animating=true;cur=i;updateUI();setTimeout(()=>animating=false,520)}
+function updateUI(){track.style.transform='translateX(-'+(cur*100)+'%)';document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));document.querySelector('.nav-prev').classList.toggle('show',cur>0);document.querySelector('.nav-next').classList.toggle('show',cur<total-1)}
+let sx=0,sy=0,dx=0,dragging=false;
+track.addEventListener('touchstart',e=>{if(animating)return;const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;dragging=false;track.classList.remove('dragging')},{passive:true});
+track.addEventListener('touchmove',e=>{if(animating)return;const t=e.touches[0],tx=t.clientX-sx,ty=t.clientY-sy;if(!dragging&&(Math.abs(tx)>10||Math.abs(ty)>10)){dragging=true;if(Math.abs(tx)>Math.abs(ty))track.classList.add('dragging')}if(dragging&&track.classList.contains('dragging')){dx=tx;track.style.transform='translateX('+(-cur*100+tx/innerWidth*100)+'%)'}},{passive:true});
+track.addEventListener('touchend',()=>{if(animating)return;track.classList.remove('dragging');if(dragging){if(Math.abs(dx)>innerWidth*.2){dx<0&&cur<total-1?goPage(cur+1):dx>0&&cur>0?goPage(cur-1):updateUI()}else updateUI()}dragging=false;dx=0},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goPage(cur+1);if(e.key==='ArrowLeft')goPage(cur-1)});
+
+build();updateUI();
+</script>
+</body>
+</html>
