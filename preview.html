@@ -143,9 +143,9 @@ html+='<div class="cover-badge"><span class="dot"></span>'+coverData.badge+'</di
   <div class="circle c1"></div>
   <div class="circle c2"></div>
   <div class="circle c3"></div>
-  <div class="leaf l1">&#127822;</div>
-  <div class="leaf l2">&#127822;</div>
-  <div class="leaf l3">&#127822;</div>
+  <div class="leaf l1"><img src="images/logo-icon.png" style="width:24px;height:24px;opacity:0.6"></div>
+  <div class="leaf l2"><img src="images/logo-icon.png" style="width:24px;height:24px;opacity:0.6"></div>
+  <div class="leaf l3"><img src="images/logo-icon.png" style="width:24px;height:24px;opacity:0.6"></div>
 </div>
 
 <div class="phone-frame" id="phoneFrame"><div id="app">
@@ -259,7 +259,7 @@ function build(){
   if(logoData&&logoData.startsWith('data:')){
     html+='<div style="width:72px;height:72px;margin:0 auto 10px;border-radius:12px;overflow:hidden"><img src="'+logoData+'" style="width:100%;height:100%;object-fit:cover"></div>';
   }else{
-    html+='<div class="cover-icon">&#127822;</div>';
+    html+='<div class="cover-icon"><img src="images/logo-icon.png" style="width:72px;height:72px;object-fit:contain"></div>';
   }
   html+='<div class="cover-badge"><span class="dot"></span>'+coverData.badge+'</div>';
   html+='<div class="cover-title">'+coverData.title+'</div>';
